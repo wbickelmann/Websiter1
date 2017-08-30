@@ -1,0 +1,19 @@
+---
+title: "DataScienceDefined"
+author: "William Taylor Bickelmann"
+date: "August 30, 2017"
+output: html_document
+---
+#This is a first level header
+##This is a second level header
+###This is level 3 header
+Bayes rule is P(A|B) = P(A)*P(B)/P(B)
+* list item one with asterisk
+* list item two same way
+
+column1 | column2
+---|---|
+Bayes|Frequentist
+Probabiity|Statistics
+
+<img src="R_studio.JPG" width = "300"/>  
