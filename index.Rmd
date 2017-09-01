@@ -1,19 +1,19 @@
 ---
-title: "DataScienceDefined"
+title: "DPLYR"
 author: "William Taylor Bickelmann"
-date: "August 30, 2017"
+date: "September 1, 2017"
 output: html_document
 ---
-#This is a first level header
-##This is a second level header
-###This is level 3 header
-Bayes rule is P(A|B) = P(A)*P(B)/P(B)
-* list item one with asterisk
-* list item two same way
+##Filtering columns and rows
+(had to use sqldf becuase dplyr was acting wonky)
+sqldf allows one to use standard query language sytanx to pull data from dataframes.
+with this I queried the Batting table in the Lahman package
 
-column1 | column2
----|---|
-Bayes|Frequentist
-Probabiity|Statistics
+```{r}
+library(Lahman)
+library(sqldf)
+sqldf("select playerID, yearID, teamID, HR 
+      from Batting
+      WHERE teamID == 'NYA' and yearID == 1927")
+```
 
-<img src="R_studio.JPG" width = "300"/>  
