@@ -4,16 +4,69 @@ author: "William Taylor Bickelmann"
 date: "September 1, 2017"
 output: html_document
 ---
+For this page I will be doing some very basic data manipulation using the packages SQLDF and DPLYR. 
 ##Filtering columns and rows
 (had to use sqldf becuase dplyr was acting wonky)
 sqldf allows one to use standard query language sytanx to pull data from dataframes.
 with this I queried the Batting table in the Lahman package
 
+
 ```{r}
-library(Lahman)
-library(sqldf)
 sqldf("select playerID, yearID, teamID, HR 
       from Batting
       WHERE teamID == 'NYA' and yearID == 1927")
 ```
+
+Here some code that selects and summarizes the number of people from the New York Yankees who had over 40 homeruns. This code,unlike the code above was done in DPLYR; a package made by Hadley Wickam.
+
+```{r}
+Batting%>%
+  select(HR, teamID, playerID)%>%
+  filter(HR >=40 & teamID=="NYA")%>%
+  summarise(cnt=n())
+```
+
+Now to add some code which return the same results but in a different order
+
+```{r}
+Batting%>%
+  filter(HR>=40, teamID=="NYA")%>%
+  select(playerID,yearID,teamID,HR)
+```
+
+Next, I will add some code to add selecting players with at least 40 homeruns and under 60 strike outs
+
+```{r}
+Batting%>%
+  select(playerID,yearID,teamID,HR,SO)%>%
+  filter(HR >= 40, SO<60)
+```
+Now I am going to add code to select players with over 30 homeruns for a different team between 1979 and 1970
+
+```{r}
+Batting%>%
+  select(playerID,yearID,teamID,HR)%>%
+  filter(teamID =="PHI", HR>30, yearID<=1979, yearID>=1970)
+```
+
+
+now for code selecting players with over 50 homeruns with the players with the most homeruns sorted first
+```{r}
+
+Batting%>%
+  select(HR, playerID, yearID)%>%
+  filter(HR > 50)%>%
+  arrange(desc(HR))
+```
+
+My code is poetry. Watch me go
+
+```{r}
+Batting%>%
+  select(playerID, SO, AB)%>%
+  filter(AB>=400, SO<10)%>%
+  arrange(SO)%>%
+  summarise(cnt=n(), average_AB = mean(AB))
+```
+
 
