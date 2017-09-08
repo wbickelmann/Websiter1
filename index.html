@@ -123,57 +123,220 @@ $(document).ready(function () {
 </div>
 
 
+<pre class="r"><code>library(sqldf)</code></pre>
+<pre><code>## Loading required package: gsubfn</code></pre>
+<pre><code>## Loading required package: proto</code></pre>
+<pre><code>## Loading required package: RSQLite</code></pre>
+<pre><code>## Loading required package: DBI</code></pre>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: 'dplyr'</code></pre>
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(Lahman)</code></pre>
 <p>For this page I will be doing some very basic data manipulation using the packages SQLDF and DPLYR. ##Filtering columns and rows (had to use sqldf becuase dplyr was acting wonky) sqldf allows one to use standard query language sytanx to pull data from dataframes. with this I queried the Batting table in the Lahman package</p>
 <pre class="r"><code>sqldf(&quot;select playerID, yearID, teamID, HR 
       from Batting
       WHERE teamID == 'NYA' and yearID == 1927&quot;)</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;sqldf&quot;</code></pre>
+<pre><code>## Loading required package: tcltk</code></pre>
+<pre><code>##     playerID yearID teamID HR
+## 1  beallwa01   1927    NYA  0
+## 2  bengobe01   1927    NYA  0
+## 3  collipa01   1927    NYA  7
+## 4  combsea01   1927    NYA  6
+## 5  duganjo01   1927    NYA  2
+## 6  durstce01   1927    NYA  0
+## 7  gazelmi01   1927    NYA  0
+## 8  gehrilo01   1927    NYA 47
+## 9  giardjo01   1927    NYA  0
+## 10 grabojo01   1927    NYA  0
+## 11  hoytwa01   1927    NYA  0
+## 12 koenima01   1927    NYA  3
+## 13 lazzeto01   1927    NYA 18
+## 14 meusebo01   1927    NYA  8
+## 15 moorewi01   1927    NYA  1
+## 16 morehra01   1927    NYA  1
+## 17 paschbe01   1927    NYA  2
+## 18 pennohe01   1927    NYA  0
+## 19 pipgrge01   1927    NYA  1
+## 20 ruethdu01   1927    NYA  1
+## 21  ruthba01   1927    NYA 60
+## 22 shawkbo01   1927    NYA  0
+## 23 shockur01   1927    NYA  0
+## 24 thomamy01   1927    NYA  0
+## 25  weraju01   1927    NYA  1</code></pre>
 <p>Here some code that selects and summarizes the number of people from the New York Yankees who had over 40 homeruns. This code,unlike the code above was done in DPLYR; a package made by Hadley Wickam.</p>
 <pre class="r"><code>Batting%&gt;%
   select(HR, teamID, playerID)%&gt;%
   filter(HR &gt;=40 &amp; teamID==&quot;NYA&quot;)%&gt;%
   summarise(cnt=n())</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>##   cnt
+## 1  30</code></pre>
 <p>Now to add some code which return the same results but in a different order</p>
 <pre class="r"><code>Batting%&gt;%
   filter(HR&gt;=40, teamID==&quot;NYA&quot;)%&gt;%
   select(playerID,yearID,teamID,HR)</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>##     playerID yearID teamID HR
+## 1   ruthba01   1920    NYA 54
+## 2   ruthba01   1921    NYA 59
+## 3   ruthba01   1923    NYA 41
+## 4   ruthba01   1924    NYA 46
+## 5   ruthba01   1926    NYA 47
+## 6  gehrilo01   1927    NYA 47
+## 7   ruthba01   1927    NYA 60
+## 8   ruthba01   1928    NYA 54
+## 9   ruthba01   1929    NYA 46
+## 10 gehrilo01   1930    NYA 41
+## 11  ruthba01   1930    NYA 49
+## 12 gehrilo01   1931    NYA 46
+## 13  ruthba01   1931    NYA 46
+## 14  ruthba01   1932    NYA 41
+## 15 gehrilo01   1934    NYA 49
+## 16 gehrilo01   1936    NYA 49
+## 17 dimagjo01   1937    NYA 46
+## 18 mantlmi01   1956    NYA 52
+## 19 mantlmi01   1958    NYA 42
+## 20 mantlmi01   1960    NYA 40
+## 21 mantlmi01   1961    NYA 54
+## 22 marisro01   1961    NYA 61
+## 23 jacksre01   1980    NYA 41
+## 24 martiti02   1997    NYA 44
+## 25 giambja01   2002    NYA 41
+## 26 giambja01   2003    NYA 41
+## 27 rodrial01   2005    NYA 48
+## 28 rodrial01   2007    NYA 54
+## 29 grandcu01   2011    NYA 41
+## 30 grandcu01   2012    NYA 43</code></pre>
 <p>Next, I will add some code to add selecting players with at least 40 homeruns and under 60 strike outs</p>
 <pre class="r"><code>Batting%&gt;%
   select(playerID,yearID,teamID,HR,SO)%&gt;%
   filter(HR &gt;= 40, SO&lt;60)</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>##     playerID yearID teamID HR SO
+## 1  hornsro01   1922    SLN 42 50
+## 2  willicy01   1923    PHI 41 57
+## 3    ottme01   1929    NY1 42 38
+## 4  kleinch01   1930    PHI 40 50
+## 5  gehrilo01   1931    NYA 46 56
+## 6   ruthba01   1931    NYA 46 51
+## 7  gehrilo01   1934    NYA 49 31
+## 8  gehrilo01   1936    NYA 49 46
+## 9  troskha01   1936    CLE 42 58
+## 10 dimagjo01   1937    NYA 46 37
+## 11  mizejo01   1940    SLN 43 49
+## 12  mizejo01   1947    NY1 51 42
+## 13  mizejo01   1948    NY1 40 37
+## 14 willite01   1949    BOS 43 48
+## 15 kinerra01   1951    PIT 42 57
+## 16 camparo01   1953    BRO 41 58
+## 17 kluszte01   1953    CIN 40 34
+## 18 rosenal01   1953    CLE 43 48
+## 19 kluszte01   1954    CIN 49 35
+## 20  mayswi01   1954    NY1 41 57
+## 21 kluszte01   1955    CIN 47 40
+## 22 aaronha01   1957    ML1 44 58
+## 23 sievero01   1957    WS1 42 55
+## 24 aaronha01   1969    ATL 44 47
+## 25 aaronha01   1971    ATL 47 58
+## 26 aaronha01   1973    ATL 40 51
+## 27 thomafr04   1993    CHA 41 54
+## 28 bondsba01   2002    SFN 46 47
+## 29 bondsba01   2003    SFN 45 58
+## 30 bondsba01   2004    SFN 45 41
+## 31 pujolal01   2004    SLN 46 52
+## 32 pujolal01   2006    SLN 49 50</code></pre>
 <p>Now I am going to add code to select players with over 30 homeruns for a different team between 1979 and 1970</p>
 <pre class="r"><code>Batting%&gt;%
   select(playerID,yearID,teamID,HR)%&gt;%
   filter(teamID ==&quot;PHI&quot;, HR&gt;30, yearID&lt;=1979, yearID&gt;=1970)</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>##    playerID yearID teamID HR
+## 1 johnsde01   1971    PHI 34
+## 2 schmimi01   1974    PHI 36
+## 3 luzingr01   1975    PHI 34
+## 4 schmimi01   1975    PHI 38
+## 5 schmimi01   1976    PHI 38
+## 6 luzingr01   1977    PHI 39
+## 7 schmimi01   1977    PHI 38
+## 8 luzingr01   1978    PHI 35
+## 9 schmimi01   1979    PHI 45</code></pre>
 <p>now for code selecting players with over 50 homeruns with the players with the most homeruns sorted first</p>
 <pre class="r"><code>Batting%&gt;%
   select(HR, playerID, yearID)%&gt;%
   filter(HR &gt; 50)%&gt;%
   arrange(desc(HR))</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>##    HR  playerID yearID
+## 1  73 bondsba01   2001
+## 2  70 mcgwima01   1998
+## 3  66  sosasa01   1998
+## 4  65 mcgwima01   1999
+## 5  64  sosasa01   2001
+## 6  63  sosasa01   1999
+## 7  61 marisro01   1961
+## 8  60  ruthba01   1927
+## 9  59  ruthba01   1921
+## 10 58  foxxji01   1932
+## 11 58 greenha01   1938
+## 12 58 howarry01   2006
+## 13 57 gonzalu01   2001
+## 14 57 rodrial01   2002
+## 15 56 wilsoha01   1930
+## 16 56 griffke02   1997
+## 17 56 griffke02   1998
+## 18 54  ruthba01   1920
+## 19 54  ruthba01   1928
+## 20 54 kinerra01   1949
+## 21 54 mantlmi01   1961
+## 22 54 ortizda01   2006
+## 23 54 rodrial01   2007
+## 24 54 bautijo02   2010
+## 25 53 davisch02   2013
+## 26 52 mantlmi01   1956
+## 27 52  mayswi01   1965
+## 28 52 fostege01   1977
+## 29 52 mcgwima01   1996
+## 30 52 rodrial01   2001
+## 31 52 thomeji01   2002
+## 32 51 kinerra01   1947
+## 33 51  mizejo01   1947
+## 34 51  mayswi01   1955
+## 35 51 fieldce01   1990
+## 36 51 jonesan01   2005</code></pre>
 <p>My code is poetry. Watch me go</p>
 <pre class="r"><code>Batting%&gt;%
   select(playerID, SO, AB)%&gt;%
   filter(AB&gt;=400, SO&lt;10)%&gt;%
   arrange(SO)%&gt;%
   summarise(cnt=n(), average_AB = mean(AB))</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>##   cnt average_AB
+## 1  65   508.2462</code></pre>
 <pre class="r"><code>Batting%&gt;%
   filter(playerID ==&quot;ruthba01&quot;)%&gt;%
   group_by(playerID)%&gt;%
   summarise(career_HR=sum(HR))</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   playerID career_HR
+##      &lt;chr&gt;     &lt;int&gt;
+## 1 ruthba01       714</code></pre>
 <pre class="r"><code>Batting%&gt;%
   select(playerID, HR)%&gt;%
   group_by(playerID)%&gt;%
   summarize(career_HR=sum(HR))%&gt;%
   filter(career_HR &gt; 600)%&gt;%
   arrange(desc(career_HR))</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>## # A tibble: 8 x 2
+##    playerID career_HR
+##       &lt;chr&gt;     &lt;int&gt;
+## 1 bondsba01       762
+## 2 aaronha01       755
+## 3  ruthba01       714
+## 4 rodrial01       696
+## 5  mayswi01       660
+## 6 griffke02       630
+## 7 thomeji01       612
+## 8  sosasa01       609</code></pre>
 <pre class="r"><code>Batting%&gt;%
   select(playerID, HR)%&gt;%
   group_by(playerID)%&gt;%
@@ -181,13 +344,33 @@ $(document).ready(function () {
   filter(average&gt;20)%&gt;%
   arrange(desc(average))%&gt;%
   summarize(cnt=n())</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##     cnt
+##   &lt;int&gt;
+## 1   143</code></pre>
 <pre class="r"><code>Batting%&gt;%
   select(playerID, HR, yearID)%&gt;%
   filter(yearID&gt;1970, HR&gt;50)%&gt;%
   group_by(playerID)%&gt;%
   distinct(playerID)</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre><code>## # A tibble: 14 x 1
+## # Groups:   playerID [14]
+##     playerID
+##        &lt;chr&gt;
+##  1 fostege01
+##  2 fieldce01
+##  3 mcgwima01
+##  4 griffke02
+##  5  sosasa01
+##  6 bondsba01
+##  7 gonzalu01
+##  8 rodrial01
+##  9 thomeji01
+## 10 jonesan01
+## 11 howarry01
+## 12 ortizda01
+## 13 bautijo02
+## 14 davisch02</code></pre>
 
 
 

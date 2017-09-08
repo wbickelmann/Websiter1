@@ -8,6 +8,11 @@ author: "William Taylor Bickelmann"
 date: "September 1, 2017"
 output: html_document
 ---
+```{r}
+library(sqldf)
+library(dplyr)
+library(Lahman)
+```
 
 For this page I will be doing some very basic data manipulation using the packages SQLDF and DPLYR. 
 ##Filtering columns and rows
