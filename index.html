@@ -123,46 +123,71 @@ $(document).ready(function () {
 </div>
 
 
-<div id="filtering-columns-and-rows" class="section level2">
-<h2>Filtering columns and rows</h2>
-<p>(had to use sqldf becuase dplyr was acting wonky) sqldf allows one to use standard query language sytanx to pull data from dataframes. with this I queried the Batting table in the Lahman package</p>
-<pre class="r"><code>library(Lahman)
-library(sqldf)</code></pre>
-<pre><code>## Loading required package: gsubfn</code></pre>
-<pre><code>## Loading required package: proto</code></pre>
-<pre><code>## Loading required package: RSQLite</code></pre>
-<pre><code>## Loading required package: DBI</code></pre>
+<p>For this page I will be doing some very basic data manipulation using the packages SQLDF and DPLYR. ##Filtering columns and rows (had to use sqldf becuase dplyr was acting wonky) sqldf allows one to use standard query language sytanx to pull data from dataframes. with this I queried the Batting table in the Lahman package</p>
 <pre class="r"><code>sqldf(&quot;select playerID, yearID, teamID, HR 
       from Batting
       WHERE teamID == 'NYA' and yearID == 1927&quot;)</code></pre>
-<pre><code>## Loading required package: tcltk</code></pre>
-<pre><code>##     playerID yearID teamID HR
-## 1  beallwa01   1927    NYA  0
-## 2  bengobe01   1927    NYA  0
-## 3  collipa01   1927    NYA  7
-## 4  combsea01   1927    NYA  6
-## 5  duganjo01   1927    NYA  2
-## 6  durstce01   1927    NYA  0
-## 7  gazelmi01   1927    NYA  0
-## 8  gehrilo01   1927    NYA 47
-## 9  giardjo01   1927    NYA  0
-## 10 grabojo01   1927    NYA  0
-## 11  hoytwa01   1927    NYA  0
-## 12 koenima01   1927    NYA  3
-## 13 lazzeto01   1927    NYA 18
-## 14 meusebo01   1927    NYA  8
-## 15 moorewi01   1927    NYA  1
-## 16 morehra01   1927    NYA  1
-## 17 paschbe01   1927    NYA  2
-## 18 pennohe01   1927    NYA  0
-## 19 pipgrge01   1927    NYA  1
-## 20 ruethdu01   1927    NYA  1
-## 21  ruthba01   1927    NYA 60
-## 22 shawkbo01   1927    NYA  0
-## 23 shockur01   1927    NYA  0
-## 24 thomamy01   1927    NYA  0
-## 25  weraju01   1927    NYA  1</code></pre>
-</div>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;sqldf&quot;</code></pre>
+<p>Here some code that selects and summarizes the number of people from the New York Yankees who had over 40 homeruns. This code,unlike the code above was done in DPLYR; a package made by Hadley Wickam.</p>
+<pre class="r"><code>Batting%&gt;%
+  select(HR, teamID, playerID)%&gt;%
+  filter(HR &gt;=40 &amp; teamID==&quot;NYA&quot;)%&gt;%
+  summarise(cnt=n())</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<p>Now to add some code which return the same results but in a different order</p>
+<pre class="r"><code>Batting%&gt;%
+  filter(HR&gt;=40, teamID==&quot;NYA&quot;)%&gt;%
+  select(playerID,yearID,teamID,HR)</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<p>Next, I will add some code to add selecting players with at least 40 homeruns and under 60 strike outs</p>
+<pre class="r"><code>Batting%&gt;%
+  select(playerID,yearID,teamID,HR,SO)%&gt;%
+  filter(HR &gt;= 40, SO&lt;60)</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<p>Now I am going to add code to select players with over 30 homeruns for a different team between 1979 and 1970</p>
+<pre class="r"><code>Batting%&gt;%
+  select(playerID,yearID,teamID,HR)%&gt;%
+  filter(teamID ==&quot;PHI&quot;, HR&gt;30, yearID&lt;=1979, yearID&gt;=1970)</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<p>now for code selecting players with over 50 homeruns with the players with the most homeruns sorted first</p>
+<pre class="r"><code>Batting%&gt;%
+  select(HR, playerID, yearID)%&gt;%
+  filter(HR &gt; 50)%&gt;%
+  arrange(desc(HR))</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<p>My code is poetry. Watch me go</p>
+<pre class="r"><code>Batting%&gt;%
+  select(playerID, SO, AB)%&gt;%
+  filter(AB&gt;=400, SO&lt;10)%&gt;%
+  arrange(SO)%&gt;%
+  summarise(cnt=n(), average_AB = mean(AB))</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre class="r"><code>Batting%&gt;%
+  filter(playerID ==&quot;ruthba01&quot;)%&gt;%
+  group_by(playerID)%&gt;%
+  summarise(career_HR=sum(HR))</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre class="r"><code>Batting%&gt;%
+  select(playerID, HR)%&gt;%
+  group_by(playerID)%&gt;%
+  summarize(career_HR=sum(HR))%&gt;%
+  filter(career_HR &gt; 600)%&gt;%
+  arrange(desc(career_HR))</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre class="r"><code>Batting%&gt;%
+  select(playerID, HR)%&gt;%
+  group_by(playerID)%&gt;%
+  summarize(average=mean(HR))%&gt;%
+  filter(average&gt;20)%&gt;%
+  arrange(desc(average))%&gt;%
+  summarize(cnt=n())</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
+<pre class="r"><code>Batting%&gt;%
+  select(playerID, HR, yearID)%&gt;%
+  filter(yearID&gt;1970, HR&gt;50)%&gt;%
+  group_by(playerID)%&gt;%
+  distinct(playerID)</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): could not find function &quot;%&gt;%&quot;</code></pre>
 
 
 

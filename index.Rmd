@@ -1,9 +1,14 @@
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
 ---
 title: "DPLYR"
 author: "William Taylor Bickelmann"
 date: "September 1, 2017"
 output: html_document
 ---
+
 For this page I will be doing some very basic data manipulation using the packages SQLDF and DPLYR. 
 ##Filtering columns and rows
 (had to use sqldf becuase dplyr was acting wonky)
@@ -59,6 +64,7 @@ Batting%>%
   arrange(desc(HR))
 ```
 
+
 My code is poetry. Watch me go
 
 ```{r}
@@ -68,5 +74,36 @@ Batting%>%
   arrange(SO)%>%
   summarise(cnt=n(), average_AB = mean(AB))
 ```
+```{r}
+Batting%>%
+  filter(playerID =="ruthba01")%>%
+  group_by(playerID)%>%
+  summarise(career_HR=sum(HR))
+```
 
+```{r}
+Batting%>%
+  select(playerID, HR)%>%
+  group_by(playerID)%>%
+  summarize(career_HR=sum(HR))%>%
+  filter(career_HR > 600)%>%
+  arrange(desc(career_HR))
+```
+```{r}
+Batting%>%
+  select(playerID, HR)%>%
+  group_by(playerID)%>%
+  summarize(average=mean(HR))%>%
+  filter(average>20)%>%
+  arrange(desc(average))%>%
+  summarize(cnt=n())
+```
+
+```{r}
+Batting%>%
+  select(playerID, HR, yearID)%>%
+  filter(yearID>1970, HR>50)%>%
+  group_by(playerID)%>%
+  distinct(playerID)
+```
 
